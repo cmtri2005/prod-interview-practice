@@ -1,0 +1,2 @@
+docker run --name chroma_postgres   -e POSTGRES_USER=u1   -e POSTGRES_PASSWORD=u1   -e POSTGRES_DB=vector_metadata   -p 5435:5432   -d postgres:15
+docker run -d -p 8000:8000 ghcr.io/chroma-core/chroma:latest

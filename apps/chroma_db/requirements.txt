@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+chromadb  
+pydantic==2.6.4
+PyYAML==6.0.1
+watchfiles==0.21.0      
+psycopg2-binary
+sqlalchemy
+docx2txt
+python-multipart
+pymupdf

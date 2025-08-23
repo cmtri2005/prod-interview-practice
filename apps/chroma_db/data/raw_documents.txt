@@ -1,0 +1,1 @@
+Mạng máy tính là một hệ thống kết nối các máy tính và các thiết bị khác (như máy in, điện thoại,...) lại với nhau, cho phép chúng chia sẻ tài nguyên, dữ liệu và giao tiếp với nhau. Mạng máy tính sử dụng các phương tiện truyền dẫn (dây cáp, sóng vô tuyến,...) và các giao thức mạng để hoạt động. 
