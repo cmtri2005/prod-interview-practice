@@ -1,7 +1,10 @@
+import uuid
 import yaml
 from service.vectorstores.chroma_store import ChromaStore
 from ids.postgres.postgres import SessionLocal, Document
 from ingestion.embedder import build_embedder 
+from ingestion.chunk import chunk_text
+
 
 class ChromaCollectionManager:
     def __init__(self, config_path: str = "./configs/config.yml", collection_name: str = None):
@@ -82,6 +85,40 @@ class ChromaCollectionManager:
             print("Postgres error:", e)
         finally:
             sess.close()
+            
+    def add_file(self, ids, document, metadatas=None, collection_name=None):
+        
+        CHUNK_SIZE = self.cfg['text_splitter']['chunk_size']
+        CHUNK_OVERLAP = self.cfg['text_splitter']['chunk_overlap']
+        documents = chunk_text(document, CHUNK_SIZE=CHUNK_SIZE, CHUNK_OVERLAP=CHUNK_OVERLAP)
+        vectors = self.embedder(documents)
+        vectors1 = [e.tolist() for e in vectors]
+        
+        collection_name =  self.collection_name
+        
+        
+        ids = [str(uuid.uuid4()) for _ in vectors1]
+        metadatas = [metadatas for _ in vectors1]
+        
+        
+        self.store.add(
+            ids=ids if self.cfg['chroma']['save_ids'] else None,
+            documents=documents if self.cfg['chroma']['save_documents'] else None,
+            embeddings=vectors1,
+            metadatas=metadatas if self.cfg['chroma']['save_metadata'] else None
+        )
+        # sync Postgres
+        sess = SessionLocal()
+        for _id, doc, meta in zip(ids, documents, metadatas):
+            db_obj = Document(
+                id=_id,
+                collection=collection_name,
+                content=doc,
+                meta=meta
+            )
+            sess.merge(db_obj)
+        sess.commit()
+        sess.close()
 
 
     def reset_collection(self, ids=None, embeddings=None, documents=None, metadatas=None, collection_name=None):
