@@ -9,3 +9,5 @@ sqlalchemy
 docx2txt
 python-multipart
 pymupdf
+
+['aca82611-14fa-4427-bb1b-a2646b5885b9'] ['string'] [{'list_string': ['string']}]

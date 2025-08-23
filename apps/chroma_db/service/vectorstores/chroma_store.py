@@ -29,14 +29,12 @@ class ChromaStore:
         return cls._instance
 
     def add(self, ids, documents, embeddings, metadatas=None):
-        metas = [
-            {"list_string": ",".join(m["list_string"])} for m in metadatas
-        ]
+
         self.collection.add(
             ids=ids,
             documents=documents,
             embeddings=embeddings,
-            metadatas=metas
+            metadatas=metadatas
         )
 
     def similarity_search(self, query_embedding, top_k=4):

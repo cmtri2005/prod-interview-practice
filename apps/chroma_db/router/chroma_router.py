@@ -1,3 +1,4 @@
+from email.mime import text
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from router.schema.chroma_schma import DocumentIn, MetadataIn, QueryIn, EmbeddingIn
 from service.vectorstores.chroma_store import ChromaStore
@@ -8,23 +9,25 @@ import json
 from typing import List
 
 router = APIRouter(prefix="/chroma")
-manager = ChromaCollectionManager()
 
+manager = ChromaCollectionManager()
+manager.store = ChromaStore(
+    client_settings=manager.cfg['chroma']['client_settings']
+)
 
 @router.post("/add_text_to_collection")
 def add_text_to_collection(
     docs: List[DocumentIn],
     metadatas: List[MetadataIn]
 ):
-    manager.store = ChromaStore(
-        client_settings=manager.cfg['chroma']['client_settings']
-    )
-    
+
     ids = [str(uuid.uuid4()) for _ in docs]
     contents = [d.query_text for d in docs]
     metas = [m.dict() for m in metadatas]
+    
+    print (ids, contents, metas)
     manager.add_documents(ids, contents, metadatas=metas)
-    print(metas)
+
     return {
         "status": "success",
         "num": len(docs),
@@ -36,13 +39,12 @@ def add_embedding_to_collection(
     embeddings: List[EmbeddingIn],
     metadatas: List[MetadataIn]
 ):
-    manager.store = ChromaStore(
-        client_settings=manager.cfg['chroma']['client_settings']
-    )
+
     ids = [str(uuid.uuid4()) for _ in embeddings]
     docs = ["## add by embedding ##" for d in embeddings]
     embeddings = [e.array for e in embeddings]
     metas = [m.dict() for m in metadatas]
+    
     manager.add_embeddings(ids, embeddings, docs, metadatas=metas)
     return {
         "status": "success",
@@ -54,33 +56,17 @@ def add_file_to_collection(
     metadatas: str = Form(...), ## error 400: FastAPI không hỗ trợ UploadFile trong body JSON (basemodel)
     file: UploadFile = File(...)
 ):
-    
-    # parse JSON metadata string -> dict
-    try:
-        metadatas_list = [MetadataIn(**m) for m in json.loads(metadatas)]
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=400, detail="Invalid JSON format in metadatas")
 
 
-    text = extract_text_from_file(file)
-    if not text.strip():
-        return {"status": "error", "message": "Empty file"}
-    docs = [DocumentIn(query_text=text)]
-    
-    manager.store = ChromaStore(
-        client_settings=manager.cfg['chroma']['client_settings']
-    )
-    
-    ids = [str(uuid.uuid4()) for _ in docs]
-    contents = [d.query_text for d in docs]
-    metas = [m.dict() for m in metadatas_list]
-    print(metas)
+
+    contents = extract_text_from_file(file)
+    ids = [str(uuid.uuid4())]
+    metas = [m for m in json.loads(metadatas)]
+    # print (ids, contents, metas)
     # add vào DB
-    manager.add_documents(ids, contents, metadatas=metas)
-
+    manager.add_file(ids, contents, metadatas=metas)
     return {
         "status": "success",
-        "num": len(docs),
         "file": file.filename,
         "metadatas": metas
     }

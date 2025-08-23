@@ -18,7 +18,7 @@ chroma:
   collection_name: "knowledge"
   save_ids: true
   save_documents: false
-  save_metadata: true
+  save_metadata: false
   client_settings:
     # persist_directory: "./chroma_db"
     chroma_server_host: "localhost"
