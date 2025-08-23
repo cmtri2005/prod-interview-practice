@@ -29,9 +29,9 @@ postgresql:
   use_postgresql: true 
   host: "localhost"
   port: 5435
-  database: "vector_metadata"
-  user: "u1"
-  password: "u1"
+  database: "k1"
+  user: "k1"
+  password: "k1"
   table_name: "vector_metadata"
   use_pgvector_extension: true  
 
