@@ -9,4 +9,5 @@ sqlalchemy
 docx2txt
 python-multipart
 pymupdf
-
+langchain
+sentence-transformers
