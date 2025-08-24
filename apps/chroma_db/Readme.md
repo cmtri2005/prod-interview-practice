@@ -6,7 +6,7 @@ pip install -r requiremets.txt
 ```
 # Set up Posgres
 ```shell
-docker run --name chroma_postgres   -e POSTGRES_USER=u1   -e POSTGRES_PASSWORD=u1   -e POSTGRES_DB=vector_metadata   -p 5435:5432   -d postgres:15
+docker run --name chroma_postgres   -e POSTGRES_USER=k1   -e POSTGRES_PASSWORD=k1   -e POSTGRES_DB=k1   -p 5435:5432   -d postgres:15
 ```
 ### Note: docker ps -a to check avoid same port. if re map, adjust in config postgres
 ## create table: 
