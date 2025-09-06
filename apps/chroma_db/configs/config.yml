@@ -1,0 +1,38 @@
+# chunk
+text_splitter:
+  chunk_size: 500
+  chunk_overlap: 50
+
+embeddings:
+  model_name: "all-MiniLM-L6-v2"
+
+# Config ChromaDB
+chroma:
+  collection_name: "knowledge"
+  save_ids: true
+  save_documents: false
+  save_metadata: false
+  client_settings:
+    chroma_server_host: "localhost"
+    chroma_server_http_port: 8000
+
+# Config Postgresql
+postgresql:
+  use_postgresql: true 
+  host: "localhost"
+  port: 5435
+  database: "k1"
+  user: "k1"
+  password: "k1"
+  table_name: "vector_metadata"
+  use_pgvector_extension: true  
+
+   
+retrieval:
+  top_k: 5
+  similarity_threshold: 0.8 
+
+logging:
+  level: "INFO"     
+  log_dir: "./logs"
+
