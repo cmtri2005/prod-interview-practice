@@ -1,18 +1,20 @@
 import uuid
 import yaml
 from service.vectorstores.chroma_store import ChromaStore
-from ids.postgres.postgres import SessionLocal, Document
-from ingestion.embedder import build_embedder 
-from ingestion.chunk import chunk_text
+from postgres.postgres import SessionLocal, Document
+from service.ingestion.embedder import build_embedder 
+from service.ingestion.chunk import chunk_text
 
 
 class ChromaCollectionManager:
-    def __init__(self, config_path: str = "./configs/config.yml", collection_name: str = None):
-        with open(config_path, "r", encoding="utf-8") as f:
+    def __init__(self,  collection_name: str = None):
+        self.config_path =  "./configs/config.yml"
+        with open(self.config_path, "r", encoding="utf-8") as f:
             self.cfg = yaml.safe_load(f)
 
         # build local embedder
         embed_cfg = self.cfg["embeddings"]
+        
         self.embedder = build_embedder(model_name=embed_cfg["model_name"])
 
         # init chroma store
@@ -28,12 +30,12 @@ class ChromaCollectionManager:
 
     def add_documents(self, ids, documents, metadatas=None, collection_name=None):
         vectors = self.embedder(documents)
-        # print(metadatas)
+     
         
         vectors1 = [e.tolist() for e in vectors]
         collection_name =  self.collection_name
-        # print(vectors1)
-        # add vào Chroma
+    
+        # add to Chroma
         self.store.add(
             ids=ids if self.cfg['chroma']['save_ids'] else None,
             documents=documents if self.cfg['chroma']['save_documents'] else None,
@@ -54,13 +56,10 @@ class ChromaCollectionManager:
         sess.close()
 
     def add_embeddings(self, ids, embeddings, documents, metadatas=None, collection_name=None):
-        # vectors = self.embedder(documents)
-        # print(metadatas)
-        
-        # vectors1 = [e.tolist() for e in vectors]
+
         collection_name =  self.collection_name
-        # print(vectors1)
-        # add vào Chroma
+      
+        # add to Chroma
         self.store.add(
             ids=ids if self.cfg['chroma']['save_ids'] else None,
             documents=documents,
@@ -130,7 +129,7 @@ class ChromaCollectionManager:
         try:
             deleted = session.query(Document).delete()
             session.commit()
-            print(f"Đã xóa {deleted} records trong bảng vector_metadata")
+            print(f"Reset {deleted} DB")
         except Exception as e:
             session.rollback()
             print("Postgres error:", e)
