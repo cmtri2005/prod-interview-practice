@@ -16,7 +16,11 @@ store = ChromaStore(
 data = store.collection.get(include=["documents", "embeddings", "metadatas"])
 for idx, _id in enumerate(data["ids"]):
     doc = data["documents"][idx]
-    emb = data["embeddings"][idx]
+    emb = data["embeddings"][idx]               
+    
+    
+    
+    
     meta = data["metadatas"][idx]
 
     emb_preview = f"{emb[:5]} ... (len={len(emb)})"
