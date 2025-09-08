@@ -32,14 +32,14 @@ class LoggerSingleton:
             return super().format(record)
 
     __instance = None
-    __lock = threading.lock()
+    __lock = threading.Lock()
 
     def __new__(cls, *args, **kwargs):
         if not cls.__instance:
             with cls.__lock:
                 if not cls.__instance:
                     cls.__instance = super().__new__(cls)
-                    cls.__instance.initialize(*args, **kwargs)
+                    cls.__instance.__initialize(*args, **kwargs)
         return cls.__instance
 
     def __initialize(self, level=logging.DEBUG):
@@ -54,9 +54,10 @@ class LoggerSingleton:
             console_handler.setFormatter(formatter)
             self.__instance.addHandler(console_handler)
 
+
     def __get_color_formatter(self):
         return self.ColoredFormatter(
-            "%(asctime)s | %(name)s [%(levelname)s]: %(message)s (%filename)s:%(lineno)d"
+            "%(asctime)s | %(name)s [%(levelname)s]: %(message)s (%(filename)s:%(lineno)d"
         )
 
     def set_level(self, level):
@@ -78,3 +79,4 @@ class Colors:
     PURPLE = "\033[95m"
     CYAN = "\033[96m"
     WHITE = "\033[97m"
+    RESET = "\033[0m"
