@@ -1,0 +1,31 @@
+---
+version: '3.8'
+services:
+  postgresql:
+      # Set wal_level from replica (default) to logical
+      # so that Debezium can capture change
+      image: postgres:latest
+      command: ['postgres', '-c', 'wal_level=logical']
+      container_name: idx_knowledge
+      healthcheck:
+        test: ['CMD', 'psql', '-U', 'k1', '-c', 'SELECT 1']
+        interval: 10s
+        timeout: 5s
+        retries: 5
+      ports:
+        - "5435:5432"
+      environment:
+        - POSTGRES_DB=k1
+        - POSTGRES_USER=k1
+        - POSTGRES_PASSWORD=k1
+
+
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: chroma_server
+    ports:
+      - "8000:8000"   # expose REST API
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+
