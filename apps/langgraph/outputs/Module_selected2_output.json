@@ -1,0 +1,53 @@
+{
+  "name": "Data Wrangling and Exploration",
+  "topics": [
+    {
+      "quiz": [],
+      "description": "This topic delves into the process of data profiling, where we analyze the structure, content, and quality of a dataset. You will learn how to identify data types, distributions, missing values, and potential inconsistencies. Understanding these characteristics is crucial for effective data cleaning and transformation.",
+      "references": [
+        "https://towardsdatascience.com/data-profiling-techniques-and-tools-f04925069d45",
+        "https://www.ibm.com/cloud/learn/data-profiling"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic explores strategies for handling missing data, a common challenge in real-world datasets. You will learn about different imputation techniques, such as mean/median/mode imputation, k-nearest neighbors, and model-based imputation, and understand their strengths and weaknesses. You'll also learn how to evaluate the impact of missing data on your analysis.",
+      "references": [
+        "https://towardsdatascience.com/handling-missing-data-in-datasets-a-comprehensive-guide-d2f04f432f27",
+        "James, G., Witten, D., Hastie, T., & Tibshirani, R. (2013). An introduction to statistical learning. Springer."
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic focuses on feature engineering, the process of creating new variables from existing ones to improve the performance of machine learning models. You will learn about different feature engineering techniques, such as encoding categorical variables, creating interaction terms, and extracting features from text data. This topic emphasizes the importance of domain knowledge and creative thinking in feature engineering.",
+      "references": [
+        "https://www.analyticsvidhya.com/blog/2021/06/a-comprehensive-guide-to-feature-engineering/",
+        "Feature Engineering for Machine Learning: Algorithms, Techniques, and Best Practices by Alice Zheng and Amanda Casari"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic introduces various data visualization techniques used to explore patterns, relationships, and trends in data. You will learn about histograms, scatter plots, box plots, heatmaps, and other visualizations, understanding their strengths and limitations for different types of data and analytical questions. Effective data visualization is crucial for communicating insights and supporting data-driven decision-making.",
+      "references": [
+        "https://towardsdatascience.com/data-visualization-techniques-a-practical-guide-for-data-scientists-7a73b196d9b3",
+        "The Visual Display of Quantitative Information by Edward Tufte"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic focuses on descriptive statistics, the mathematical tools used to summarize and understand the key characteristics of a dataset. You will learn about measures of central tendency (mean, median, mode), measures of dispersion (variance, standard deviation), and other descriptive statistics. Understanding these concepts allows you to quantify data patterns, identify outliers, and communicate data insights effectively.",
+      "references": [
+        "https://www.khanacademy.org/math/statistics-probability/data-analysis",
+        "OpenIntro Statistics by David Diez, Mine Çetinkaya-Rundel, and Christopher Barr"
+      ]
+    }
+  ],
+  "description": "This module focuses on advanced data cleaning, transformation, and exploratory data analysis techniques. It covers data profiling, missing data handling, feature engineering, and visualization.",
+  "aims": [
+    "Implement strategies for handling missing data and outliers in datasets.",
+    "Perform feature engineering to create new variables and improve model performance.",
+    "Apply data visualization techniques to explore patterns and relationships in data.",
+    "Use descriptive statistics to summarize and understand data distributions."
+  ],
+  "sequence_id": 3
+}

@@ -12,15 +12,13 @@ store = ChromaStore(
     client_settings=chroma_cfg["client_settings"],
 )
 
-# Lấy toàn bộ data trong collection
 data = store.collection.get(include=["documents", "embeddings", "metadatas"])
 for idx, _id in enumerate(data["ids"]):
     doc = data["documents"][idx]
     emb = data["embeddings"][idx]               
     
     
-    
-    
+
     meta = data["metadatas"][idx]
 
     emb_preview = f"{emb[:5]} ... (len={len(emb)})"
