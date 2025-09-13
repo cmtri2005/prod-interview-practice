@@ -1,0 +1,113 @@
+{
+  "modules": [
+    {
+      "name": "Data Foundations",
+      "description": "This module establishes a strong understanding of core data concepts, including data types, structures, and fundamental principles of data analysis.",
+      "aims": [
+        "Define and differentiate between various data types.",
+        "Explain key data structures and their applications.",
+        "Describe the essential principles of data integrity and quality.",
+        "Identify common data analysis methods and their purposes."
+      ],
+      "sequence_id": 1,
+      "topics": []
+    },
+    {
+      "name": "Python for Data Science",
+      "description": "Master the fundamentals of Python programming with a focus on libraries and tools essential for data science tasks.",
+      "aims": [
+        "Write basic Python code and understand control flow structures.",
+        "Utilize essential Python libraries like NumPy, Pandas, and Matplotlib.",
+        "Perform data manipulation, cleaning, and analysis using Python.",
+        "Visualize data effectively using Python graphing libraries."
+      ],
+      "sequence_id": 2,
+      "topics": []
+    },
+    {
+      "name": "SQL for Data Management",
+      "description": "Learn the intricacies of SQL to query, manipulate, and manage data stored in relational databases.",
+      "aims": [
+        "Write basic SQL queries to retrieve, filter, and aggregate data.",
+        "Understand database schema design and normalization principles.",
+        "Perform data manipulation tasks using SQL UPDATE, INSERT, and DELETE statements.",
+        "Optimize SQL queries for performance and efficiency."
+      ],
+      "sequence_id": 3,
+      "topics": []
+    },
+    {
+      "name": "Data Wrangling and Exploration",
+      "description": "Develop skills in preparing and exploring data for analysis, including cleaning, transforming, and summarizing.",
+      "aims": [
+        "Implement data cleaning techniques to handle missing values and inconsistencies.",
+        "Transform data into desired formats for analysis.",
+        "Summarize and explore data using descriptive statistics and visualizations.",
+        "Identify patterns and trends within datasets."
+      ],
+      "sequence_id": 4,
+      "topics": []
+    },
+    {
+      "name": "Data Modeling and Visualization",
+      "description": "Learn techniques for building data models and effectively visualizing insights.",
+      "aims": [
+        "Design and implement data models using appropriate techniques.",
+        "Utilize data visualization tools to communicate findings effectively.",
+        "Create interactive dashboards and reports to present data insights.",
+        "Develop a strong understanding of visual storytelling principles."
+      ],
+      "sequence_id": 5,
+      "topics": []
+    },
+    {
+      "name": "Machine Learning Fundamentals",
+      "description": "Gain a foundational understanding of machine learning concepts, algorithms, and applications.",
+      "aims": [
+        "Define key machine learning concepts such as supervised and unsupervised learning.",
+        "Understand common machine learning algorithms and their applications.",
+        "Apply basic machine learning models to real-world data.",
+        "Evaluate the performance of machine learning models."
+      ],
+      "sequence_id": 6,
+      "topics": []
+    },
+    {
+      "name": "Big Data Technologies",
+      "description": "Explore the world of big data technologies, including Hadoop, Spark, and cloud-based data platforms.",
+      "aims": [
+        "Understand the architecture and capabilities of Hadoop.",
+        "Learn to process and analyze large datasets using Spark.",
+        "Explore cloud-based data platforms like AWS, Azure, and Google Cloud.",
+        "Implement big data solutions for real-world problems."
+      ],
+      "sequence_id": 7,
+      "topics": []
+    },
+    {
+      "name": "Data Ethics and Privacy",
+      "description": "Develop a responsible approach to data science by understanding ethical considerations and privacy regulations.",
+      "aims": [
+        "Identify ethical dilemmas in data science applications.",
+        "Understand data privacy regulations and best practices.",
+        "Advocate for responsible and ethical use of data.",
+        "Promote data literacy and awareness among stakeholders."
+      ],
+      "sequence_id": 8,
+      "topics": []
+    },
+    {
+      "name": "Data Storytelling and Communication",
+      "description": "Learn to effectively communicate data insights through compelling narratives and visualizations.",
+      "aims": [
+        "Structure data-driven stories that engage audiences.",
+        "Tailor communication style to different audiences.",
+        "Create impactful presentations and reports.",
+        "Develop strong data visualization skills for storytelling."
+      ],
+      "sequence_id": 9,
+      "topics": []
+    }
+  ],
+  "roadmap": "Data Science Fundamentals Roadmap"
+}

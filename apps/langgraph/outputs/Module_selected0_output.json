@@ -1,0 +1,53 @@
+{
+  "name": "Data Modeling Fundamentals",
+  "topics": [
+    {
+      "quiz": [],
+      "description": "This topic introduces the fundamental building blocks of data modeling: entities, attributes, and relationships. You'll learn to identify these elements in real-world scenarios and represent them effectively. Understanding entities, attributes, and relationships is crucial for designing well-structured and understandable data models.",
+      "references": [
+        "Bateman, J. (2015). Database Design for Mere Mortals: A Hands-On Guide to Relational Database Design. O'Reilly Media, Inc.",
+        "Codd, E. F. (1970). A relational model of data for large shared data banks. Communications of the ACM, 13(6), 377-387."
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic explores the concept of normalization, a key principle in relational database design. You'll learn about different normal forms (1NF, 2NF, 3NF) and how they help to eliminate data redundancy, improve data integrity, and ensure data consistency. Applying normalization principles is essential for creating efficient and maintainable databases.",
+      "references": [
+        "Elmasri, R., & Navathe, S. B. (2011). Fundamentals of Database Systems (6th ed.). Addison-Wesley.",
+        "Date, C. J. (2002). Introduction to Database Systems (8th ed.). Addison-Wesley."
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic focuses on the creation of Entity-Relationship (ER) diagrams, a visual representation of data models. You'll learn to model complex data relationships using entities, attributes, and relationships, and understand how ER diagrams facilitate communication and collaboration in database design. ER diagrams are essential for clearly defining the structure and relationships within a database.",
+      "references": [
+        "Chen, P. P. (1976). The entity-relationship model — toward a unified view of data. ACM Transactions on Database Systems (TODS), 1(1), 9-36.",
+        "Stair, R. M., & Reynolds, G. W. (2014). Principles of Information Systems (12th ed.). Cengage Learning."
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic introduces dimensional modeling, a data modeling technique widely used in data warehousing and business intelligence applications. You'll learn about fact tables, dimension tables, and snowflake schemas, and understand how dimensional models are optimized for analytical queries and reporting.",
+      "references": [
+        "Kimball, R. (2002). The Data Warehouse Toolkit: The Complete Guide to Dimensional Modeling (2nd ed.). John Wiley & Sons Inc.",
+        "Inmon, W. H. (2005). Building the Data Warehouse (3rd ed.). Wiley."
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic explores different data modeling techniques beyond relational databases, including NoSQL databases and graph databases. You'll learn about the strengths and weaknesses of each approach and understand when to choose a specific technique based on the requirements of the application.",
+      "references": [
+        "Khoshgoftaar, T. M., & Seliya, N. (2013). Introduction to NoSQL databases. CRC Press.",
+        "Gottlieb, S. (2013). Graph Databases: Concepts, Models, and Technologies. Morgan Kaufmann."
+      ]
+    }
+  ],
+  "description": "This module introduces the core concepts of data modeling, including entity-relationship diagrams, normalization, and database design principles. You'll learn to design efficient and scalable data models for various applications.",
+  "aims": [
+    "Define and apply key data modeling concepts (entities, attributes, relationships).",
+    "Design relational database schemas using normalization principles.",
+    "Develop ER diagrams to represent complex data relationships.",
+    "Understand different data modeling techniques (e.g., dimensional modeling)."
+  ],
+  "sequence_id": 1
+}

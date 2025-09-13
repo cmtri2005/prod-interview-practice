@@ -1,0 +1,48 @@
+{
+  "name": "Data Wrangling and Exploration",
+  "topics": [
+    {
+      "description": "This topic delves into the crucial process of data cleaning, focusing on identifying and handling missing values, outliers, and inconsistencies. Learners will understand various imputation techniques, outlier detection methods, and strategies for ensuring data quality for reliable analysis.",
+      "references": [
+        "James, G., Witten, D., Hastie, T., & Tibshirani, R. (2013). An introduction to statistical learning. Springer.",
+        "Deng, J., & Chen, Y. (2019). Data cleaning techniques: a survey. Journal of Big Data, 6(1), 1-25."
+      ]
+    },
+    {
+      "description": "Explore different data transformation techniques, including scaling, standardization, encoding categorical variables, and creating interaction terms. This topic emphasizes how these transformations can improve the performance of machine learning models and facilitate meaningful insights.",
+      "references": [
+        "Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12(Oct), 2825-2830.",
+        "Géron, A. (2019). Hands-on machine learning with scikit-learn, Keras, and TensorFlow. O'Reilly Media, Inc."
+      ]
+    },
+    {
+      "description": "Learn to summarize and visualize data distributions using descriptive statistics, histograms, box plots, and scatter plots. This topic equips learners with the tools to identify patterns, trends, and potential outliers in their data, laying the foundation for deeper analysis.",
+      "references": [
+        "Cleveland, W. S. (1993). Visualization of data. Hobart Press.",
+        "Tukey, J. W. (1977). Exploratory data analysis. Addison-Wesley Professional."
+      ]
+    },
+    {
+      "description": "Dive into advanced exploratory data analysis techniques like correlation analysis, principal component analysis, and clustering. Learners will gain insights into relationships between variables, dimensionality reduction, and data segmentation, enabling them to uncover hidden patterns and structures within their data.",
+      "references": [
+        "Abdi, H., & Williams, L. J. (2010). Principal component analysis. Wiley Interdisciplinary Reviews: Data Mining and Knowledge Discovery, 1(1), 43-59.",
+        "Jain, A. K. (2010). Data clustering: 50 years beyond k-means. Pattern Recognition Letters, 31(8), 651-666."
+      ]
+    },
+    {
+      "description": "This topic focuses on feature engineering, a critical process in data preparation. Learners will learn techniques for creating new features from existing ones, improving the predictive power of models. This includes feature scaling, encoding categorical variables, and generating interaction terms.",
+      "references": [
+        "Guyon, I., & Elisseeff, A. (2003). An introduction to variable and feature selection. Journal of Machine Learning Research, 3, 1157-1182.",
+        "Feurer, M., Hutter, F., & Leyton-Brown, K. (2015). Hyperparameter optimization. Foundations and Trends® in Machine Learning, 7(2), 105-210."
+      ]
+    }
+  ],
+  "description": "This module focuses on preparing and exploring data for analysis. Learners will learn techniques for data cleaning, transformation, and feature engineering, along with methods for summarizing and visualizing data distributions.",
+  "aims": [
+    "Clean and prepare real-world datasets for analysis.",
+    "Implement data transformation techniques to create meaningful features.",
+    "Apply exploratory data analysis methods to understand data patterns and relationships.",
+    "Visualize data distributions and relationships to identify trends and insights."
+  ],
+  "sequence_id": 2
+}
