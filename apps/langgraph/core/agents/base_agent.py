@@ -8,4 +8,5 @@ class BaseAgent(ABC):
         super().__init__()
         self.agent_name = agent_name
         self.llm = llm
+        self.llm = BaseChatModel
         self.tools = tools
