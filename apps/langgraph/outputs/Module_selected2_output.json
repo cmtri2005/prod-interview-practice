@@ -1,0 +1,46 @@
+{
+  "name": "Python Programming for Data Science",
+  "topics": [
+    {
+      "quiz": [],
+      "description": "This topic introduces the fundamentals of Python programming, covering basic syntax, data types (integers, floats, strings, booleans), variables, and operators. You'll learn how to write simple Python expressions and statements, laying the foundation for more complex data science tasks.",
+      "references": [
+        "https://docs.python.org/3/tutorial/introduction.html",
+        "https://www.w3schools.com/python/"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "Explore Python's core data structures: lists, dictionaries, and tuples. Learn how to create, access, modify, and iterate through these structures, understanding their strengths and weaknesses for different data manipulation scenarios. This topic is crucial for organizing and working with datasets effectively.",
+      "references": [
+        "https://docs.python.org/3/tutorial/datastructures.html",
+        "Python Data Structures & Algorithms by Michael T. Goodrich"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "Master control flow structures in Python, including conditional statements (if, elif, else) and loops (for, while). Learn to write code that executes different blocks of code based on conditions and iterates over data efficiently. This topic empowers you to create dynamic and logic-driven data processing pipelines.",
+      "references": [
+        "https://docs.python.org/3/tutorial/controlflow.html",
+        "Automate the Boring Stuff with Python by Al Sweigart"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "Dive into essential Python libraries for data science: Pandas for data manipulation and analysis, and NumPy for numerical computing. Learn how to load, clean, transform, and analyze datasets using these powerful tools. This topic equips you with the foundational libraries for working with real-world data.",
+      "references": [
+        "https://pandas.pydata.org/docs/",
+        "https://numpy.org/doc/",
+        "Python for Data Analysis by Wes McKinney"
+      ]
+    }
+  ],
+  "description": "Learn Python fundamentals, data structures, control flow, and essential libraries for data analysis and manipulation.",
+  "aims": [
+    "Write basic Python code and understand data types.",
+    "Utilize Python lists, dictionaries, and tuples to store and manipulate data.",
+    "Apply control flow structures (loops and conditional statements) for data processing.",
+    "Import and work with key Python libraries for data science (e.g., Pandas, NumPy)."
+  ],
+  "sequence_id": 3
+}

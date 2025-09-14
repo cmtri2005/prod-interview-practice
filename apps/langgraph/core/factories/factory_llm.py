@@ -41,8 +41,8 @@ class LLMFactory:
         if llm_provider == LLMFactory.Provider.BEDROCK:
             from langchain_aws import ChatBedrockConverse
 
-            # kwargs = {"model": config["model_name"], "api_key": config["api_key"]}
-            kwargs = {"model_id": "us.meta.llama3-3-70b-instruct-v1:0", "region_name": "us-east-1"}
+            kwargs = {"model": config["model_name"], "api_key": config["api_key"]}
+            
             if "api_endpoint" in config:
                 kwargs["api_endpoint"] = config["api_endpoint"]
             if "max_tokens" in config:

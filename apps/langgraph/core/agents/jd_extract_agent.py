@@ -14,6 +14,7 @@ class JDExtractAgent(BaseAgent):
         super().__init__(agent_name, llm, tools)
         self.llm = llm
         self.logger = LoggerSingleton().get_instance()
+        self.MAX_RETRIES = 3 ## clean sau
         self.parser = JsonOutputParser()
         feild_des = "\n".join(
             f"- {name}: {field.description}" for name, field in JD.model_fields.items()
@@ -42,11 +43,10 @@ class JDExtractAgent(BaseAgent):
                 "format_instructions": self.parser.get_format_instructions(),
             }
 
-            jd_dict = self.invoke_chain(prompt_inputs, messages, MAX_RETRIES=3)
-            jd : JD = JD(**jd_dict)
+            jd : JD = self.invoke_chain(prompt_inputs, messages)
 
             self.tools["save_raw_output"](
-                "JD_output.json", json.dumps(jd_dict, indent=2, ensure_ascii=False)
+                "JD_output.json", json.dumps(jd.model_dump_json(), indent=2, ensure_ascii=False)
             )
 
             messages.append(("ai", f"JD Extraction: {jd}"))
@@ -62,26 +62,28 @@ class JDExtractAgent(BaseAgent):
             raise ValueError(f"[{self.agent_name}] failed: {str(e)}")
 
         
-    def invoke_chain(self, prompt_inputs: dict, messages: list, MAX_RETRIES: int) -> dict:
+    def invoke_chain(self, prompt_inputs: dict, messages: list) -> JD:
         chain = self.prompt | self.llm 
         raw = chain.invoke(prompt_inputs)
         text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
         text = text.strip()
         parsed_dict = {}
+        jd : JD = None
 
-        for attempt in range(1, MAX_RETRIES + 1):
+        for attempt in range(1, self.MAX_RETRIES + 1):
             try:
                 parsed_dict = self.parser.parse(text)
-                break
+                jd : JD = JD(**parsed_dict)
+                return jd
             except (ValidationError, ValueError) as e:
-                if attempt < MAX_RETRIES:
-                    self.logger.debug(f"Validation failed, retrying {attempt}/{MAX_RETRIES}...")
+                if attempt < self.MAX_RETRIES:
+                    self.logger.debug(f"Validation failed, retrying {attempt}/{self.MAX_RETRIES}...")
                     raw = chain.invoke(prompt_inputs)
                     text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
                     text = text.strip()
                 else:
-                    messages.append(("ai", f"Failed to parse JD Extraction after {MAX_RETRIES} attempts. Error: {e}"))
+                    messages.append(("ai", f"Failed to parse JD Extraction after {self.MAX_RETRIES} attempts. Error: {e}"))
                     break
 
-        return parsed_dict
+        return jd
 
