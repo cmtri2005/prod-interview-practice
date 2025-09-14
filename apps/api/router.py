@@ -24,7 +24,6 @@ class Input_Module(BaseModel):
 async def upload_file(file: UploadFile = File(...)):
     thread_id = str(uuid.uuid4())
     events = []
-    text = ""
     
     
     try:
@@ -36,23 +35,19 @@ async def upload_file(file: UploadFile = File(...)):
 
     try:
         async for ev in lang_app.astream(
-            {"jd_text": jd_content},
+            {"jd_text": jd_content, "next_agent": "JD_Extract"},
             config={"configurable": {"thread_id": thread_id}}
         ):
             events.append(ev)
-            
-            if "Analyze_modules_Agent" in ev and ev["Analyze_modules_Agent"].get("awaiting_input"):
-                logger.info("Graph signaled awaiting_input -> breaking astream to return to client")
+            if len(events) == 3:
                 break
 
     except Exception as e:
         logger.exception("Error while running graph:", e)
-        raise
+        raise  
     
     output = {
-        "Extract JD Agent": events[0]["JD_extract"].get("jd"),
-        "Learning Progress Agent": events[1]["Learning_Progress_Agent"].get("learningProgress"),
-        # "messages": events[-1]["Analyze_modules_Agent"].get("messages"),
+        "messages": events[-1]["Analyze_Modules_Agent"].get("messages"),
         "thread_id": thread_id
     }
     return output
@@ -63,12 +58,31 @@ async def upload_file(file: UploadFile = File(...)):
 async def input_module(idx: Input_Module):
     events = []
     async for ev in lang_app.astream(
-        {"idx_module": idx.idx_module},
+        {"idx_module": idx.idx_module, "next_agent": "Analyze_Modules_Agent"},
         config={"configurable": {"thread_id": idx.thread_id}}
     ):
         events.append(ev)
-    return {"Analysis Agent": events[-1]["Analyze_modules_Agent"].get("messages")}
+    return {"messages": events[0]["Analyze_Modules_Agent"].get("messages")}
 
 
+@router.post("/exit_graph")
+async def input_module(thread_id: str):
+    events = []
+    async for ev in lang_app.astream(
+        {"exit_graph": True, "thread_id": thread_id, "next_agent": "Analyze_Modules_Agent"},
+        config={"configurable": {"thread_id": thread_id}}
+    ):
+        events.append(ev)
+    return {"messages": events[0]["Analyze_Modules_Agent"].get("messages")[-1]}
+
+@router.post("/load_history") 
+async def load_history(thread_id: str):
+    events = []
+    async for ev in lang_app.astream(
+        {"thread_id": thread_id, "next_agent": "Analyze_Modules_Agent"},
+        config={"configurable": {"thread_id": thread_id}}
+    ):
+        events.append(ev)
+    return {"messages": events[0]["Analyze_Modules_Agent"].get("learningProgress")}
 
 

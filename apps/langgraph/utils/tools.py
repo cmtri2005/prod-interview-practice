@@ -1,12 +1,17 @@
 from typing import Callable, Dict
 from langchain_community.document_loaders import TextLoader, Docx2txtLoader, PyPDFLoader
 from pathlib import Path
-from apps.langgraph.schema.learning_progress import LearningProgress, Module, Topic
+from apps.langgraph.schema.learning_progress import LearningProgress
+from apps.langgraph.schema.jd import JD
 from langchain_tavily import TavilySearch 
 from apps.helper.logger import LoggerSingleton
 from pathlib import Path
 import tempfile
 from fastapi import UploadFile
+from apps.chroma_db.postgres.db_agent import SessionLocal
+from apps.chroma_db.postgres.dao import JDDAO, LearningProgressDAO, MessageDAO
+from apps.langgraph.utils.state import AgentState
+import json
 logger = LoggerSingleton().get_instance()
 
 class Tools:
@@ -50,40 +55,38 @@ class Tools:
     
     
     @staticmethod
-    def select_module_node(learningProgress):
-        modules = learningProgress.modules
-        return {
-            "require_user_input": True,
-            "prompt": f"Please select one module by index (0..{len(modules)-1}):",
-            "modules": [m.model_dump() for m in modules]
-        }
+    def save_agent_state(state: AgentState, thread_id: str):
+        
+        db = SessionLocal()
+        try:
+            id = thread_id
+            
+            jd_dao = JDDAO(db)
+            jd = state.get("jd").model_dump_json()
+            jd_text = state.get("jd_text")
+            jd_dao.insert(id, jd_text, jd)
 
-    
-    @staticmethod
-    def select_topic_node(module: Module) -> Topic:
-        topics = module.topics
-        while True:
-            raw = input("Select topic index (or 'q' to abort): ").strip()
-            if raw.lower() in ("q", "quit", "exit"):
-                raise KeyboardInterrupt("User aborted selection")
-            if not raw.isdigit():
-                print("Please enter a number.")
-                continue
-            idx = int(raw)
-            if 0 <= idx < 7:
-                break
-            print("Index out of range. Try again.")
+            lp_dao = LearningProgressDAO(db)
+            lp = state.get("learningProgress").model_dump_json()
+            lp_dao.insert(id, lp)
 
-        topic_selected = topics[idx]
-        return topic_selected
+            msg_dao = MessageDAO(db)
+            msg = json.dumps(state.get("messages"))
+            msg_dao.insert(id, msg)
+
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise e
+        finally:
+            db.close()
 
 def default_tools_mapping() -> Dict[str, Callable]:
     
     return {
         "file_loader": Tools.file_loader,
-        "input_module_selector": Tools.select_module_node,
-        "input_topic_selector": Tools.select_topic_node,
         "save_raw_output": Tools.save_raw_output,
         "web_search": Tools.web_search_tavily,
+        "save_state": Tools.save_agent_state
     }
 
