@@ -13,7 +13,7 @@ class QuizModel(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     history = Column(JSONB, nullable=False, default=list)
-    
+
     question = Column(String, nullable=False)
     question_date_created = Column(DateTime, nullable=False)
     generated_by_user_id = Column(String, nullable=False)
