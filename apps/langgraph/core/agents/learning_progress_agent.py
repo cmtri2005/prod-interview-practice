@@ -16,6 +16,7 @@ class LearningProgressAgent(BaseAgent):
         super().__init__(agent_name, llm, tools)
         self.llm = llm
         self.logger = LoggerSingleton().get_instance()
+        self.MAX_RETRIES = 3 ## clean sau
         self.parser = JsonOutputParser()
         field_des_learning_progress = "\n".join(f"- {name}: {field.description}" for name, field in LearningProgress.model_fields.items())
         field_des_module = "\n".join(f"- {name}: {field.description}" for name, field in Module.model_fields.items())
@@ -55,11 +56,10 @@ class LearningProgressAgent(BaseAgent):
                 "format_instructions": self.parser.get_format_instructions()
             }
 
-            learningProgress_dict = self.invoke_chain(prompt_inputs, messages, MAX_RETRIES=3)
+            learningProgress = self.invoke_chain(prompt_inputs, messages)
 
-            self.tools["save_raw_output"]("LearningProgress_output.json", json.dumps(learningProgress_dict, indent=2, ensure_ascii=False))
+            self.tools["save_raw_output"]("LearningProgress_output.json", json.dumps(learningProgress.model_dump_json(), indent=2, ensure_ascii=False))
 
-            learningProgress = LearningProgress(**learningProgress_dict)
             messages.append(("ai", f"Learning Progress: {learningProgress}"))
 
             self.logger.info(f"[{self.agent_name}] completed successfully.\n")
@@ -74,34 +74,31 @@ class LearningProgressAgent(BaseAgent):
             raise  ValueError(f"[{self.agent_name}] failed: {str(e)}")
 
 
-    def invoke_chain(self, prompt_inputs: dict, messages: list, MAX_RETRIES: int) -> dict:
+    def invoke_chain(self, prompt_inputs: dict, messages: list) -> LearningProgress:
         
         chain = self.prompt | self.llm 
         raw = chain.invoke(prompt_inputs)
         text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
         text = text.strip()
         parsed_dict = {}
+        learningProgress: LearningProgress = None
         
-        for attempt in range(1, MAX_RETRIES + 1):
+        for attempt in range(1, self.MAX_RETRIES + 1):
             try:
                 parsed_dict = self.parser.parse(text)
-                
-                if (parsed_dict.get("modules") is None) or (len(parsed_dict.get("modules", [])) == 0):
-                    self.logger.error("Modules is empty")
-                    raise ValueError("Modules is empty")
-                    
-                break
+                learningProgress = LearningProgress(**parsed_dict)
+                return learningProgress
             except (ValidationError, ValueError) as e:
-                if attempt < MAX_RETRIES:
-                    self.logger.debug(f"Validation failed, retrying {attempt}/{MAX_RETRIES}...")
+                if attempt < self.MAX_RETRIES:
+                    self.logger.debug(f"Validation failed, retrying {attempt}/{self.MAX_RETRIES}...")
                     raw = chain.invoke(prompt_inputs)
                     text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
                     text = text.strip()
                 else:
-                    messages.append(("ai", f"Failed to parse Learning Progress after {MAX_RETRIES} attempts. Error: {e}"))
+                    messages.append(("ai", f"Failed to parse Learning Progress after {self.MAX_RETRIES} attempts. Error: {e}"))
                     break
 
-        return parsed_dict
+        return learningProgress
 
     
     

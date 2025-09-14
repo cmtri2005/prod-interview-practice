@@ -14,6 +14,7 @@ class AnaLysisAgent(BaseAgent):
         super().__init__(agent_name, llm, tools)
         self.llm = llm
         self.logger = LoggerSingleton().get_instance()
+        self.MAX_RETRIES = 3 ## clean sau
         self.parser = JsonOutputParser()
         feild_des = "\n".join(f"- {name}: {field.description}" for name, field in Topic.model_fields.items())
         self.prompt = ChatPromptTemplate([
@@ -84,8 +85,7 @@ class AnaLysisAgent(BaseAgent):
                 "module_json": module.model_dump_json(),
                 "format_instructions": self.parser.get_format_instructions()
             }
-            topic_array = self.invoke_chain(prompt_inputs, messages, MAX_RETRIES=3)
-            module.topics = [Topic(**topic) for topic in topic_array]
+            module.topics = self.invoke_chain(prompt_inputs, messages)
 
             self.tools["save_raw_output"](f"Module_selected{idx}_output.json", module.model_dump_json(indent=2))
             messages.append(("ai", f"Analysis Module: {module}"))
@@ -102,28 +102,30 @@ class AnaLysisAgent(BaseAgent):
             raise ValueError(f"[{self.agent_name}] failed: {e}")
         
         
-    def invoke_chain(self, prompt_inputs: dict, messages: list, MAX_RETRIES: int) -> list[dict]:
+    def invoke_chain(self, prompt_inputs: dict, messages: list) -> list[Topic]:
         
         chain = self.prompt | self.llm 
         raw = chain.invoke(prompt_inputs)
         text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
         text = text.strip()
         array_parsed_dict = []
+        topics : list[Topic] = None
         
-        for attempt in range(1, MAX_RETRIES + 1):
+        for attempt in range(1, self.MAX_RETRIES + 1):
             try:
                 array_parsed_dict = self.parser.parse(text)
-                break
+                topics = [Topic(**topic) for topic in array_parsed_dict]
+                return topics
             except (ValidationError, ValueError) as e:
-                if attempt < MAX_RETRIES:
-                    self.logger.debug(f"Validation failed, retrying {attempt}/{MAX_RETRIES}...")
+                if attempt < self.MAX_RETRIES:
+                    self.logger.debug(f"Validation failed, retrying {attempt}/{self.MAX_RETRIES}...")
                     raw = chain.invoke(prompt_inputs)
                     text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
                     text = text.strip()
                 else:
-                    messages.append(("ai", f"Failed to parse Analysis Module after {MAX_RETRIES} attempts. Error: {e}"))
+                    messages.append(("ai", f"Failed to parse Analysis Module after {self.MAX_RETRIES} attempts. Error: {e}"))
                     break
 
-        return array_parsed_dict
+        return topics
     
         
