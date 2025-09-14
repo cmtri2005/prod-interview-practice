@@ -43,7 +43,7 @@ class JDExtractAgent(BaseAgent):
         except Exception as e:
             self.logger.error(f"Error: {e}")
 
-        chain = self.prompt | self.llm_with_structured_output(JD)
+        chain = self.prompt | self.llm.with_structured_output(JD)
         jd = chain.invoke({"jd_content": jd_content})
 
         return {"jd": jd}

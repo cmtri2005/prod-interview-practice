@@ -7,7 +7,7 @@ class LLMFactory:
     class Config(TypedDict):
         model_name: Required[str]
         api_key: Required[str]
-        api_endpoint: Required[str]
+        api_endpoint: NotRequired[str]
         max_tokens: NotRequired[int]
         temperature: NotRequired[float]
         timeout: NotRequired[float]
@@ -73,5 +73,4 @@ class LLMFactory:
 
             return ChatGroq(**kwargs)
 
-        if llm_provider not in LLMFactory.Provider:
-            raise ValueError(f"Not in LLM Provider: {llm_provider}")
+        raise ValueError(f"Not supported LLM Provider: {llm_provider}")
