@@ -1,6 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate
+from pydantic import ValidationError
 from apps.helper.logger import LoggerSingleton
-
+from langgraph.graph import END
 from apps.langgraph.core.agents.base_agent import BaseAgent
 from apps.langgraph.schema.learning_progress import Topic, LearningProgress
 from apps.langgraph.utils.state import AgentState
@@ -21,7 +22,7 @@ class AnaLysisAgent(BaseAgent):
                 Extract the following fields and ONLY return valid JSON matching the schema:
                 {feild_des}
                 Important:
-                - Quiz must be []. It will be filled by another agent.
+                - Field quiz must be []. It will be filled by another agent.
                 Rules:
                 - Topics should be distinct (no duplicates or near-duplicates) and at least 5 topics. But not more than 10 topic.
                 - Each topic's description should clearly relate to the module's aims.
@@ -36,52 +37,93 @@ class AnaLysisAgent(BaseAgent):
 
 
     def run(self, state: AgentState) -> AgentState:
+        self.logger.info(f"[{self.agent_name}] is running...")     
+        messages = state.get("messages", [])
+        learningProgress: LearningProgress = state.get("learningProgress")  
+        
+        ## CHECK_INPUT
+        idx_module = state.get("idx_module", None)
+        if idx_module is None:
+            self.logger.info("Graph signaled awaiting_input -> breaking astream to return to client")
+            messages.append(("sys", "Please input idx_module"))
+            return {
+                "messages": messages,
+                "next_agent": "END"
+            }
+        ## EXIT
+        if state.get("exit_graph") is not None and state.get("exit_graph"):
+            messages.append(("human", f"At {self.agent_name}. Exit Graph"))
+            thread_id = state.get("thread_id")
+            self.tools["save_state"](state, thread_id)
+            return {
+                "messages": messages ,
+                "exit_graph": None,
+                "next_agent": "END"
+            }
+  
+        ## MAIN         
         try:
-            self.logger.info(f"[{self.agent_name}] is running...")
-            messages = state.get("messages", [])
-            learningProgress: LearningProgress = state.get("learningProgress")
-            
-            idx_module = state.get("idx_module", None)
-            if idx_module is None:
-                messages.append(("human", "Please input idx_module"))
-                return {
-                    "learningProgress" : learningProgress,
-                    "messages": messages,
-                    "awaiting_input": True
-                }
-
             try:
                 idx = state.get("idx_module")
                 module = learningProgress.modules[idx]
+                messages.append(("human", f"Index selected module: {idx}"))
             except Exception as e:
                 self.logger.error(f"Invalid selection: {state.get('idx_module')}")
                 raise ValueError(f"Invalid selection: {state.get('idx_module')}") from e
 
+            ## check_history
+            if module.topics is not None and module.topics != []:
+                messages.append(("sys", f"Load data {self.agent_name} is sucess"))
+                return {
+                    "learningProgress": learningProgress,
+                    "messages": messages,
+                    "idx_module": idx
+                }
+                
             prompt_inputs = {
                 "module_json": module.model_dump_json(),
                 "format_instructions": self.parser.get_format_instructions()
             }
-            chain = self.prompt | self.llm
-            raw = chain.invoke(prompt_inputs)
-            text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
-            text = text.strip()
-
-            topic_array = self.parser.parse(text)
+            topic_array = self.invoke_chain(prompt_inputs, messages, MAX_RETRIES=3)
             module.topics = [Topic(**topic) for topic in topic_array]
-            
-            messages.append(("human", f"Index selected module: {idx}"))
-            messages.append(("ai", f"Topics generated: {topic_array}"))
 
             self.tools["save_raw_output"](f"Module_selected{idx}_output.json", module.model_dump_json(indent=2))
+            messages.append(("ai", f"Analysis Module: {module}"))
 
             self.logger.info(f"[{self.agent_name}] completed successfully.")
             return {
                 "learningProgress": learningProgress,
                 "messages": messages,
-                "awaiting_input": False,
                 "idx_module": idx
             }
 
         except Exception as e:
             self.logger.error(f"[{self.agent_name}] failed: {e}")
             raise ValueError(f"[{self.agent_name}] failed: {e}")
+        
+        
+    def invoke_chain(self, prompt_inputs: dict, messages: list, MAX_RETRIES: int) -> list[dict]:
+        
+        chain = self.prompt | self.llm 
+        raw = chain.invoke(prompt_inputs)
+        text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
+        text = text.strip()
+        array_parsed_dict = []
+        
+        for attempt in range(1, MAX_RETRIES + 1):
+            try:
+                array_parsed_dict = self.parser.parse(text)
+                break
+            except (ValidationError, ValueError) as e:
+                if attempt < MAX_RETRIES:
+                    self.logger.debug(f"Validation failed, retrying {attempt}/{MAX_RETRIES}...")
+                    raw = chain.invoke(prompt_inputs)
+                    text = getattr(raw, "content", None) or getattr(raw, "text", None) or str(raw)
+                    text = text.strip()
+                else:
+                    messages.append(("ai", f"Failed to parse Analysis Module after {MAX_RETRIES} attempts. Error: {e}"))
+                    break
+
+        return array_parsed_dict
+    
+        
