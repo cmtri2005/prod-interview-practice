@@ -1,6 +1,6 @@
 from email.mime import text
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
-from router.schema.chroma_schma import DocumentIn, MetadataIn, QueryIn, EmbeddingIn
+from schema.chroma_schema import DocumentIn, MetadataIn, QueryIn, EmbeddingIn
 from service.vectorstores.chroma_store import ChromaStore
 from service.manage_collection import ChromaCollectionManager
 import uuid
