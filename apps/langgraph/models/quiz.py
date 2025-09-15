@@ -1,6 +1,6 @@
 from apps.helper.logger import LoggerSingleton
 from sqlalchemy import Column, String, DateTime, Float, Text, ARRAY
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 import uuid
 from apps.db.session import Base
 
@@ -12,6 +12,8 @@ class QuizModel(Base):
     __tablename__ = "quizzes"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    history = Column(JSONB, nullable=False, default=list)
+
     question = Column(String, nullable=False)
     question_date_created = Column(DateTime, nullable=False)
     generated_by_user_id = Column(String, nullable=False)

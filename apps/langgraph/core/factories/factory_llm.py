@@ -74,5 +74,7 @@ class LLMFactory:
 
             return ChatGroq(**kwargs)
 
+        raise ValueError(f"Not supported LLM Provider: {llm_provider}")
+
         if llm_provider not in LLMFactory.Provider:
             raise ValueError(f"Not in LLM Provider: {llm_provider}")

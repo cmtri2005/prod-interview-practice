@@ -1,7 +1,9 @@
 import dotenv
 import json
 import threading
+from apps.helper.logger import LoggerSingleton
 from logger import LoggerSingleton
+
 
 logger = LoggerSingleton().get_instance()
 
@@ -19,7 +21,7 @@ class ConfigSingleton:
         return cls.__instance
 
     def __initialize(self):
-        #self.config = dotenv.dotenv_values(".env")
+        # self.config = dotenv.dotenv_values(".env")
         self.__instance = ConfigSingleton()
 
         logger.info(f"Config: {self.__instance.__dict__}")
