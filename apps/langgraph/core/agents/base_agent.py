@@ -7,5 +7,6 @@ class BaseAgent(ABC):
     def __init__(self, agent_name: str, llm: BaseChatModel, tools: list[Callable]):
         super().__init__()
         self.agent_name = agent_name
+        self.llm = llm
         self.llm = BaseChatModel
         self.tools = tools
