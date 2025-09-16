@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Field
 from typing import List
-from apps.langgraph.schema.interview_qa import InterviewQA
+from apps.langgraph.schema.interview_quiz import QuizOut
 
 
 class Topic(BaseModel):
-    quiz: List[InterviewQA] = Field(
+    quiz: List[QuizOut] = Field(
         default_factory=list,
         description=("List of interview-style question/answer objects related to this topic. Each InterviewQA should include the question text, an ideal answer or rubric, hints, and optionally references or metadata for grading."),
     )

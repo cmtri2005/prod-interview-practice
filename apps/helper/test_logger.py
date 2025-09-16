@@ -1,4 +1,4 @@
-from logger import LoggerSingleton
+from apps.helper.logger import LoggerSingleton
 
 logger = LoggerSingleton().get_instance()
 

@@ -7,10 +7,10 @@ load_dotenv()
 
 
 engine = create_engine(
-    f"postgresql+psycopg2://{os.environ["POSTGRES_USER"]}:{os.environ["POSTGRES_PASSWORD"]}@{"127.0.0.1"}:{5432}",
+    f"postgresql+psycopg2://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{'127.0.0.1'}:{5432}",
     echo=True,
 )
 
 # session
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, expire_on_commit=False)
 Base = declarative_base()

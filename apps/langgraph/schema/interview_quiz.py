@@ -1,9 +1,13 @@
 from datetime import datetime
+from uuid import UUID
 from pydantic import BaseModel, Field
+from pydantic import ConfigDict
+
 
 
 class QuizOut(BaseModel):
-    id: str = Field()
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID = Field()
     history: list = Field()
 
     question: str = Field()

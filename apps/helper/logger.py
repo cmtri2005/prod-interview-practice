@@ -57,7 +57,7 @@ class LoggerSingleton:
 
     def __get_color_formatter(self):
         return self.ColoredFormatter(
-            "%(asctime)s | %(name)s [%(levelname)s]: %(message)s (%(filename)s:%(lineno)d"
+            "%(asctime)s | %(name)s [%(levelname)s]: %(message)s (%(filename)s:%(lineno)d)"
         )
 
     def set_level(self, level):
