@@ -25,6 +25,7 @@ def get_quiz(quiz_id: str) -> QuizModel:
     finally:
         session.close()
 
+
 def generate_quiz(
     history: List,
     question: str,
@@ -55,4 +56,3 @@ def generate_quiz(
     session.commit()
     session.close()
     return quiz
-    

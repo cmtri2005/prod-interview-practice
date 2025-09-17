@@ -1,18 +1,17 @@
 from typing import Callable, Dict
-from langchain_community.document_loaders import TextLoader, Docx2txtLoader, PyPDFLoader
-from pathlib import Path
-from apps.langgraph.schema.learning_progress import LearningProgress
-from apps.langgraph.schema.jd import JD
-from langchain_tavily import TavilySearch 
-from apps.helper.logger import LoggerSingleton
-from pathlib import Path
 import tempfile
-from fastapi import UploadFile
-from apps.chroma_db.postgres.db_agent import SessionLocal
-from apps.chroma_db.postgres.dao import JDDAO, LearningProgressDAO, MessageDAO
-from apps.langgraph.utils.state import AgentState
 import json
+from pathlib import Path
+from fastapi import UploadFile
+from langchain_community.document_loaders import TextLoader, Docx2txtLoader, PyPDFLoader
+from langchain_tavily import TavilySearch
+from apps.helper.logger import LoggerSingleton
+from apps.db.session import SessionLocal
+from apps.db.dao import JDDAO, LearningProgressDAO, MessageDAO
+from apps.langgraph.utils.state import AgentState
+
 logger = LoggerSingleton().get_instance()
+
 
 class Tools:
     @staticmethod
@@ -35,12 +34,12 @@ class Tools:
         docs = loader.load()
         return "\n".join(d.page_content for d in docs)
 
-    
-
     @staticmethod
     def save_raw_output(fname: str, content: str):
         try:
-            p = Path("/mnt/d/Desktop/Desktop/MLOps/prod-interview-practice/apps/langgraph/outputs")
+            p = Path(
+                "/mnt/d/Desktop/Desktop/MLOps/prod-interview-practice/apps/langgraph/outputs"
+            )
             p.mkdir(parents=True, exist_ok=True)
             path = p / fname
             path.write_text(content, encoding="utf-8")
@@ -48,19 +47,16 @@ class Tools:
             logger.error(f"Error: {e}")
             print(e)
 
- 
     @staticmethod
     def web_search_tavily():
         return TavilySearch(max_results=4)
-    
-    
+
     @staticmethod
     def save_agent_state(state: AgentState, thread_id: str):
-        
         db = SessionLocal()
         try:
             id = thread_id
-            
+
             jd_dao = JDDAO(db)
             jd = state.get("jd").model_dump_json()
             jd_text = state.get("jd_text")
@@ -81,12 +77,11 @@ class Tools:
         finally:
             db.close()
 
+
 def default_tools_mapping() -> Dict[str, Callable]:
-    
     return {
         "file_loader": Tools.file_loader,
         "save_raw_output": Tools.save_raw_output,
         "web_search": Tools.web_search_tavily,
-        "save_state": Tools.save_agent_state
+        "save_state": Tools.save_agent_state,
     }
-

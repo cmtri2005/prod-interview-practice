@@ -1,4 +1,3 @@
-from typing import Base
 from sqlalchemy import Column, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from apps.db.session import Base

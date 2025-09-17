@@ -201,6 +201,3 @@ class GenQuizAgent(BaseAgent):
             session.commit()
 
         return quiz
-
-
-

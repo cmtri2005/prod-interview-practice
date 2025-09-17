@@ -1,18 +1,16 @@
 import os
-from langchain_core.language_models.chat_models import BaseChatModel
+from typing import Optional
+import matplotlib.pyplot as plt
+import networkx as nx
 from langgraph.graph import StateGraph, END, START
+from langgraph.checkpoint.memory import InMemorySaver
 from apps.langgraph.utils.state import AgentState
+from apps.langgraph.utils.tools import default_tools_mapping
 from apps.langgraph.core.agents.jd_extract_agent import JDExtractAgent
 from apps.langgraph.core.agents.analysis_agent import AnaLysisAgent
 from apps.langgraph.core.agents.learning_progress_agent import LearningProgressAgent
-
-from apps.langgraph.utils.tools import default_tools_mapping
-from apps.helper.logger import LoggerSingleton
 from apps.langgraph.core.factories.factory_llm import LLMFactory
-from typing import Literal, Optional
-import matplotlib.pyplot as plt
-import networkx as nx
-from langgraph.checkpoint.memory import InMemorySaver
+from apps.helper.logger import LoggerSingleton
 
 
 class Orchestrator:

@@ -1,7 +1,7 @@
+import uuid
 from apps.helper.logger import LoggerSingleton
 from sqlalchemy import Column, String, DateTime, Float, Text, ARRAY
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-import uuid
 from apps.db.session import Base
 
 

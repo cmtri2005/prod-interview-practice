@@ -12,7 +12,6 @@ class LLMFactory:
         temperature: NotRequired[float]
         timeout: NotRequired[float]
         max_retries: NotRequired[int]
-        
 
     class Provider(Enum):
         OPENAI = "openai"
@@ -42,7 +41,7 @@ class LLMFactory:
             from langchain_aws import ChatBedrockConverse
 
             kwargs = {"model": config["model_name"], "api_key": config["api_key"]}
-            
+
             if "api_endpoint" in config:
                 kwargs["api_endpoint"] = config["api_endpoint"]
             if "max_tokens" in config:

@@ -4,7 +4,6 @@ from pydantic import BaseModel, Field
 from pydantic import ConfigDict
 
 
-
 class QuizOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: UUID = Field()
