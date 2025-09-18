@@ -49,7 +49,7 @@ class LearningProgressAgent(BaseAgent):
                 ),
                 (
                     "human",
-                    "JD JSON:\n```{learningProgress_json}```\n\n"
+                    "JD JSON:\n```{jd_json}```\n\n"
                     "{format_instructions}\nGenerate LearningProgress JSON",
                 ),
             ]
@@ -63,7 +63,7 @@ class LearningProgressAgent(BaseAgent):
         ## MAIN
         try:
             prompt_inputs = {
-                "learningProgress_json": jd.model_dump_json(),
+                "jd_json": jd.model_dump_json(),
                 "format_instructions": self.parser.get_format_instructions(),
             }
 
