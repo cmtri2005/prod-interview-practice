@@ -8,6 +8,10 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_aws import ChatBedrockConverse
 from apps.langgraph.data.quiz import get_quiz, generate_quiz
 from apps.db.session import SessionLocal
+from apps.helper.exceptions.exception import (
+    QuizNotFound,
+    MalformeRequestError,
+)
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -136,24 +140,23 @@ class GenQuizAgent(BaseAgent):
 
     def handle_answer_quiz(self, user_id: str, quiz_id: str, answer: str) -> object:
         if user_id is None or user_id.strip() == "":
-            raise ValueError("user_id is required")
+            raise MalformeRequestError("Malformed request: user_id is required")
         if quiz_id is None or quiz_id.strip() == "":
-            raise ValueError("quiz_id is required")
+            raise MalformeRequestError("Malformed request: quiz_id is required")
         if answer is None or answer.strip() == "":
-            raise ValueError("answer is required")
-        #
+            raise MalformeRequestError("Malformed request: answer is required")
+
         try:
             quiz = get_quiz(quiz_id)
             if quiz is None:
-                raise ValueError(f"Quiz not found with id: {quiz_id}")
+                raise QuizNotFound(f"Quiz not found with id: {quiz_id}")
         except Exception as e:
-            raise ValueError(f"Error to get quiz by quiz_id: {quiz_id}. Error:{e}")
+            raise QuizNotFound(f"Error to get quiz by quiz_id: {quiz_id}. Error:{e}")
 
         conventional_history = quiz.history
         conventional_history.append({"role": "human", "content": answer})
         logger.info(f"Processing answer quiz with history: {conventional_history}")
 
-        print("----------DEBUG-------------")
         prompt = ChatPromptTemplate.from_messages(conventional_history)
 
         chain = prompt | self.llm
@@ -180,7 +183,7 @@ class GenQuizAgent(BaseAgent):
 
         except Exception as e:
             logger.error(f"Error invoking LLM: {str(e)}", exc_info=True)
-            raise
+            raise MalformeRequestError(f"Error invoking LLM: {str(e)}")
 
         # Update
         quiz.answered_by_user_id = user_id

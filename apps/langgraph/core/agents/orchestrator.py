@@ -9,6 +9,7 @@ from apps.langgraph.utils.tools import default_tools_mapping
 from apps.langgraph.core.agents.jd_extract_agent import JDExtractAgent
 from apps.langgraph.core.agents.analysis_agent import AnaLysisAgent
 from apps.langgraph.core.agents.learning_progress_agent import LearningProgressAgent
+from apps.langgraph.core.agents.generate_quiz_agent import GenQuizAgent
 from apps.langgraph.core.factories.factory_llm import LLMFactory
 from apps.helper.logger import LoggerSingleton
 
@@ -67,7 +68,7 @@ class Orchestrator:
             "Learning_Progress_Agent",
             entry_router,
             {
-                "END": END,  ## may be nerver
+                "END": END, 
                 "Analyze_Modules_Agent": "Analyze_Modules_Agent",
             },
         )
