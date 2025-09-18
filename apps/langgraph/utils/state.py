@@ -13,3 +13,4 @@ class AgentState(TypedDict):
     next_agent: str = None
     exit_graph: bool = None
     thread_id: str = None
+    knowledge_rag: str = None

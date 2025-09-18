@@ -1,0 +1,62 @@
+{
+  "name": "Data Wrangling and Exploration",
+  "topics": [
+    {
+      "quiz": [],
+      "description": "This topic introduces fundamental concepts of data cleaning, including identifying and handling missing values, outliers, and inconsistencies. Learners will explore techniques for data transformation, such as imputation and standardization, to prepare data for analysis.",
+      "references": [
+        "https://www.kaggle.com/learn/handling-missing-data",
+        "https://towardsdatascience.com/data-cleaning-techniques-for-data-analysis-4066c4643a7c"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic focuses on data visualization techniques using popular Python libraries like Matplotlib and Seaborn. Learners will create various charts, including histograms, scatter plots, and box plots, to explore patterns, identify trends, and communicate insights effectively.",
+      "references": [
+        "https://matplotlib.org/",
+        "https://seaborn.pydata.org/",
+        "https://towardsdatascience.com/data-visualization-with-python-using-matplotlib-and-seaborn-458894734c33"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic delves into the world of Python data structures, exploring arrays, lists, dictionaries, and sets. Learners will understand their characteristics, operations, and how to manipulate data efficiently using these structures.",
+      "references": [
+        "https://docs.python.org/3/tutorial/datastructures.html",
+        "https://www.geeksforgeeks.org/python-data-structures/"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic introduces the Pandas library, a powerful tool for data manipulation and analysis in Python. Learners will learn how to read, clean, transform, and aggregate data using Pandas DataFrames.",
+      "references": [
+        "https://pandas.pydata.org/docs/",
+        "https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOq1h8h79VyDW1zD7c"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic explores essential data aggregation techniques, including calculating mean, median, mode, variance, and standard deviation. Learners will understand how to summarize data and gain insights into central tendencies and data spread.",
+      "references": [
+        "https://www.statisticshowto.com/probability-and-statistics/descriptive-statistics/measures-of-central-tendency/",
+        "https://www.khanacademy.org/math/statistics-probability/summarizing-data-review"
+      ]
+    },
+    {
+      "quiz": [],
+      "description": "This topic focuses on understanding different data types and structures, such as numerical, categorical, text, and time series data. Learners will learn how to identify data types and apply appropriate cleaning and transformation techniques.",
+      "references": [
+        "https://en.wikipedia.org/wiki/Data_type",
+        "https://www.datacamp.com/community/tutorials/data-types-python"
+      ]
+    }
+  ],
+  "description": "This module introduces the fundamentals of data cleaning, transformation, and exploration. Learners will gain practical skills in handling messy data, identifying patterns, and preparing data for analysis.",
+  "aims": [
+    "Clean and prepare data for analysis using Python libraries.",
+    "Apply data transformation techniques to handle missing values and inconsistencies.",
+    "Visualize data using histograms, scatter plots, and other charts to identify trends and patterns.",
+    "Understand data types and structures, and perform basic data aggregation."
+  ],
+  "sequence_id": 1
+}

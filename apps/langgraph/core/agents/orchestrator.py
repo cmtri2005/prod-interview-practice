@@ -9,6 +9,7 @@ from apps.langgraph.utils.tools import default_tools_mapping
 from apps.langgraph.core.agents.jd_extract_agent import JDExtractAgent
 from apps.langgraph.core.agents.analysis_agent import AnaLysisAgent
 from apps.langgraph.core.agents.learning_progress_agent import LearningProgressAgent
+from apps.langgraph.core.agents.rag import Rag
 from apps.langgraph.core.factories.factory_llm import LLMFactory
 from apps.helper.logger import LoggerSingleton
 
@@ -42,10 +43,16 @@ class Orchestrator:
         module_agent = AnaLysisAgent(
             "Analyze_Modules_Agent", llm=self.llm, tools=self.tools
         )
+        rag = Rag(
+            "rag", llm=self.llm, tools=self.tools
+        )
 
         graph.add_node("JD_Extract", jd_extract_agent.run)
         graph.add_node("Learning_Progress_Agent", learning_progress_agent.run)
         graph.add_node("Analyze_Modules_Agent", module_agent.run)
+        
+        # graph.add_node("RagLP", rag.Learning_Progress_rag)
+        graph.add_node("RagModule", rag.Module_rag)
 
         def entry_router(state: AgentState) -> str:
             if state.get("next_agent"):
@@ -57,21 +64,23 @@ class Orchestrator:
             entry_router,
             {
                 "JD_Extract": "JD_Extract",
-                "Learning_Progress_Agent": "Learning_Progress_Agent",
                 "Analyze_Modules_Agent": "Analyze_Modules_Agent",
             },
         )
         graph.add_edge("JD_Extract", "Learning_Progress_Agent")
-
+        graph.add_edge("Learning_Progress_Agent", "Analyze_Modules_Agent")
+        
+        
         graph.add_conditional_edges(
-            "Learning_Progress_Agent",
+            "Analyze_Modules_Agent",
             entry_router,
             {
-                "END": END,  ## may be nerver
-                "Analyze_Modules_Agent": "Analyze_Modules_Agent",
+                "RagModule": "RagModule",
+                "END": END,
             },
         )
-        graph.add_edge("Analyze_Modules_Agent", END)
+        graph.add_edge("RagModule", "Analyze_Modules_Agent")
+        
 
         self.graph = graph
         app = graph.compile(checkpointer=self.checkpointer)

@@ -40,7 +40,8 @@ class AnaLysisAgent(BaseAgent):
                 ),
                 (
                     "human",
-                    "PModule JSON:\n```{module_json}```\n\n"
+                    "Module JSON:\n```{module_json}```\n\n"
+                    "Additional knowledge (use ONLY when relevant):\n```{knowledge}```\n\n"
                     "{format_instructions}\nGenerate array Topic JSON",
                 ),
             ]
@@ -83,12 +84,27 @@ class AnaLysisAgent(BaseAgent):
                     "learningProgress": learningProgress,
                     "messages": messages,
                     "idx_module": idx,
+                    "next_agent": "END"
                 }
 
+            # Rag
+            if state.get("knowledge_rag") is None:
+                return {
+                    "learningProgress": learningProgress,
+                    "messages": messages,
+                    "idx_module": idx,
+                    "next_agent": "RagModule"
+                }
+            # analysis module
             prompt_inputs = {
                 "module_json": module.model_dump_json(),
+                "knowledge": state.get("knowledge_rag"),
                 "format_instructions": self.parser.get_format_instructions(),
             }
+            print("=================================================")
+            print(state.get("knowledge_rag"))
+            print("=================================================")
+            
             module.topics = self.invoke_chain(prompt_inputs, messages)
 
             self.tools["save_raw_output"](
@@ -101,6 +117,7 @@ class AnaLysisAgent(BaseAgent):
                 "learningProgress": learningProgress,
                 "messages": messages,
                 "idx_module": idx,
+                "next_agent": "END"
             }
 
         except Exception as e:
