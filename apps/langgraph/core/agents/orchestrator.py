@@ -43,14 +43,12 @@ class Orchestrator:
         module_agent = AnaLysisAgent(
             "Analyze_Modules_Agent", llm=self.llm, tools=self.tools
         )
-        rag = Rag(
-            "rag", llm=self.llm, tools=self.tools
-        )
+        rag = Rag("rag", llm=self.llm, tools=self.tools)
 
         graph.add_node("JD_Extract", jd_extract_agent.run)
         graph.add_node("Learning_Progress_Agent", learning_progress_agent.run)
         graph.add_node("Analyze_Modules_Agent", module_agent.run)
-        
+
         # graph.add_node("RagLP", rag.Learning_Progress_rag)
         graph.add_node("RagModule", rag.Module_rag)
 
@@ -69,8 +67,7 @@ class Orchestrator:
         )
         graph.add_edge("JD_Extract", "Learning_Progress_Agent")
         graph.add_edge("Learning_Progress_Agent", "Analyze_Modules_Agent")
-        
-        
+
         graph.add_conditional_edges(
             "Analyze_Modules_Agent",
             entry_router,
@@ -80,7 +77,6 @@ class Orchestrator:
             },
         )
         graph.add_edge("RagModule", "Analyze_Modules_Agent")
-        
 
         self.graph = graph
         app = graph.compile(checkpointer=self.checkpointer)

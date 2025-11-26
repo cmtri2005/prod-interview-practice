@@ -16,8 +16,12 @@ class Rag(BaseAgent):
         self.llm = llm
         self.logger = LoggerSingleton().get_instance()
         self.parser = JsonOutputParser()
-        
-        with open("/mnt/d/Desktop/Desktop/MLOps/prod-interview-practice/details.json", "r", encoding="utf-8") as f:
+
+        with open(
+            "/mnt/d/Desktop/Desktop/MLOps/prod-interview-practice/details.json",
+            "r",
+            encoding="utf-8",
+        ) as f:
             self.data = json.load(f)
 
         # Build list of IDs in readable form
@@ -26,9 +30,11 @@ class Rag(BaseAgent):
         )
 
         # Prompt template for RAG
-        self.prompt = ChatPromptTemplate.from_messages([(
-                "system",
-                f"""You are a helpful assistant that matches concepts to the most relevant knowledge pages.  
+        self.prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    f"""You are a helpful assistant that matches concepts to the most relevant knowledge pages.  
                 Here is the list of all available knowledge IDs:
                 {all_ids_str}
                 Instructions:
@@ -37,13 +43,15 @@ class Rag(BaseAgent):
                 - Only return JSON in the following schema:
                     "matched_idx": ["1", "2"]
                 Do not include explanations or extra text.
-                """,),
-            (
-                "human",
-                "Concept JSON:\n```{concept_json}```"
-                "{format_instructions}\nGenerate index matched JSON",
-            ),
-        ])
+                """,
+                ),
+                (
+                    "human",
+                    "Concept JSON:\n```{concept_json}```"
+                    "{format_instructions}\nGenerate index matched JSON",
+                ),
+            ]
+        )
 
     def Learning_Progress_rag(self, state: AgentState) -> AgentState:
         self.logger.info(f"[{self.agent_name}] is running...\n")
@@ -52,7 +60,7 @@ class Rag(BaseAgent):
         agentstate = {"next_agent": "Learning_Progress_Agent"}
         agentstate.update(self.invoke_rag(jd, state))
         return agentstate
-    
+
     def Module_rag(self, state: AgentState) -> AgentState:
         self.logger.info(f"[{self.agent_name}] is running...\n")
         learningProgress: LearningProgress = state.get("learningProgress")
@@ -64,17 +72,16 @@ class Rag(BaseAgent):
             "idx_module": idx_module,
             "messages": messages,
             "learningProgress": learningProgress,
-            "next_agent": "Analyze_Modules_Agent"
+            "next_agent": "Analyze_Modules_Agent",
         }
         agentstate.update(self.invoke_rag(module))
         return agentstate
-    
 
     def invoke_rag(self, concept: Any):
         try:
             prompt_inputs = {
                 "concept_json": concept.model_dump_json(),
-                "format_instructions": self.parser.get_format_instructions()
+                "format_instructions": self.parser.get_format_instructions(),
             }
 
             # Ensure parsing with JsonOutputParser
@@ -85,16 +92,20 @@ class Rag(BaseAgent):
             list_id = raw["matched_idx"]
             knowledge = ""
             for i in list_id:
-                knowledge += self.data[int(i)]["id"] + ": " + ", ".join(self.data[int(i)]["labels"]) + "\n"
-            
+                knowledge += (
+                    self.data[int(i)]["id"]
+                    + ": "
+                    + ", ".join(self.data[int(i)]["labels"])
+                    + "\n"
+                )
+
             self.logger.info(f"[{self.agent_name}] completed successfully.\n")
-            return {
-                "knowledge_rag": knowledge
-            }
+            return {"knowledge_rag": knowledge}
 
         except Exception as e:
             self.logger.error(f"[{self.agent_name}] failed: {str(e)}", exc_info=True)
             raise ValueError(f"[{self.agent_name}] failed: {str(e)}")
+
 
 # class match_id(BaseChatModel):
 #     list_id: list[str] = Field(default_factory=list)

@@ -20,3 +20,4 @@ class AnswerNotFound(Exception):
 
 class MalformeRequestError(Exception):
     pass
+

@@ -8,7 +8,8 @@ from apps.langgraph.utils.tools import Tools
 from apps.langgraph.core.agents.generate_quiz_agent import GenQuizAgent
 from apps.langgraph.core.agents.generate_quiz_agent import get_model
 from apps.langgraph.schema.interview_quiz import QuizOut
-from typing import List
+
+
 logger = LoggerSingleton().get_instance()
 
 
